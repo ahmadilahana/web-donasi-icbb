@@ -10,7 +10,7 @@
       <div class="row mb-3">
         <label class="col-sm-2 col-form-label">Tanggal</label>
         <div class="col-sm-4">
-          <b-form-datepicker id="datepicker-placeholder" v-model="date" placeholder="Choose a date" locale="id"></b-form-datepicker>
+          <input type="date" v-model="date" class="form-control" />
         </div>
       </div>
       <div class="row mb-3">
@@ -39,10 +39,11 @@
 <script>
 import Cookies from 'js-cookie'
 import axios from 'axios'
+import { dateFormat } from '@theredhead/dateformat'
 export default {
-  name: 'Home',
-  data () {
-    return {
+  name: "Home",
+  data() {
+    return{
       token: Cookies.get('token'),
       date: '',
       nama: '',
@@ -51,22 +52,23 @@ export default {
     }
   },
   methods: {
-    store () {
+    store(){
+      const date = new Date(this.date)
       // console.log( dateFormat(date, 'Y-m-d') ) py ws nemu?
-      return axios.post('https://backenddonasitv.binbaz.or.id/api/donatur', {
+      return axios.post('https://website-donation-icbb.herokuapp.com/api/donatur', {
         name: this.nama,
-        date: this.date,
+        date: dateFormat(date, 'd-M-Y'),
         nominal: this.nominal,
         address: this.alamat
       }).then((result) => {
         console.log(result.data)
-        this.$router.push('/data-donasi')
+        this.$router.push('/data-donasi');
       }).catch((error) => {
         console.log(error.response)
       })
     }
-  }
-}
+  } 
+};
 </script>
 
 <style>
