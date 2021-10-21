@@ -36,8 +36,17 @@ export default {
     axios.get('https://backenddonasitv.binbaz.or.id/api/donatur')
       .then((response) => {
         // console.log(response.data.data)
-        this.info = response.data.data
-        this.data = response.data.data[0]
+        var now = new Date()
+        now = moment(now).format('YYYY-MM-D')
+        for (let i = 0; i < response.data.data.length; i++) {
+          var date = moment(response.data.data[i].date).diff(now, 'day')
+          console.log(date + '>= -30')
+          if (date >= -30) {
+            this.info.push(response.data.data[i])
+            this.data = response.data.data[i]
+          }
+        }
+        console.log(this.info)
         // setTimeout(() => {
         $('#list-donatur').slideDown()
         $('#list-donatur').show()
@@ -49,10 +58,10 @@ export default {
       })
   },
   created: function () {
-    let i = 1
+    let i = 0
     setInterval(() => {
       const index = i++ % this.namesLength
-      console.log(index + '= ' + i + '%' + this.namesLength)
+      // console.log(index + '= ' + i + '%' + this.namesLength)
       this.data = this.info[index]
       // setTimeout(() => {
       $('#list-donatur').slideDown()
